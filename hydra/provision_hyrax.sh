@@ -4,6 +4,7 @@ FITS="1.0.2"
 RUBY="2.3.3"
 RAILS="5.0.0.1"
 
+sudo yum makecache fast
 yes | sudo yum install -y git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison curl sqlite-devel
 yes | sudo yum install -y java-1.8.0-openjdk.x86_64 wget unzip nodejs
 
@@ -69,21 +70,21 @@ fi
 # Install Rails
 echo 'Installing rails '$RAILS
 gem install rails -v $RAILS 
-# Clone and run hyrax_ulcc
+# Clone and run dart_hyrax
 cd
-if [ ! -d hyrax_ulcc ]
+if [ ! -d dart_hyrax ]
 then
-  echo 'Cloning hyrax_ulcc'
-  git clone https://github.com/ULCC/hyrax_ulcc.git 
+  echo 'Cloning dart_hyrax'
+  git clone https://github.com/ULCC/dart_hyrax.git
 else
   echo 'hyrax_ulcc is already cloned, moving on ... '
 fi
 cd
-cd hyrax_ulcc
+cd dart_hyrax
 echo 'Running bundler and db:migrate'
 bundle install 
 rake db:migrate 
 
 echo 'Provisioning is complete, now follow these steps:'
-echo '1. cd ~/hyrax_ulcc'
+echo '1. cd ~/dart_hyrax'
 echo '2. rake hydra:server'

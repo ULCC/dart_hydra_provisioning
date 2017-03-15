@@ -30,13 +30,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
+  # copy the files into place before shell provision runs
+  config.vm.provision "file", source: "./install_files/", destination: "/home/centos/"
   # Run the provision script as the vagrant user (not root)
   config.vm.provision "shell", path: "provision_hyku.sh", privileged: false
-  # copy the files into place - NOT WORKING
-  config.vm.provision "file", source: "./install_files/fedora.yml", destination: "/tmp/fedora.yml"
-  config.vm.provision "file", source: "./install_files/fedora.yml", destination: "/tmp/blacklight.yml"
-  config.vm.provision "file", source: "./install_files/fedora.yml", destination: "/tmp/solr.yml"
-  config.vm.provision "file", source: "./install_files/settings.yml", destination: "/tmp/settings.yml"
+
 
   # Application server
   config.vm.define :hyku do |hyku|

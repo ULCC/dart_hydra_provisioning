@@ -3,6 +3,7 @@
 FITS="1.0.2" # testing 1.0.5
 RUBY="2.3.3"
 RAILS="5.0.0.1"
+RAILS_MODE="development"
 
 yes | sudo yum install -y git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel bzip2 autoconf automake libtool bison curl sqlite-devel
 yes | sudo yum install -y java-1.8.0-openjdk.x86_64 wget unzip
@@ -92,10 +93,10 @@ sudo sed -i 's/ident/md5/' /var/lib/pgsql/data/pg_hba.conf
 sudo systemctl start postgresql
 sudo systemctl enable postgresql
 
-# Add the user, create a development database and grant all privileges
+# Add the user, create database and grant all privileges
 sudo -u postgres bash -c "psql -c \"CREATE USER centos WITH PASSWORD 'centos';\""
-sudo -u postgres bash -c "psql -c \"CREATE DATABASE development;\""
-sudo -u postgres bash -c "psql -c \"GRANT ALL ON DATABASE development TO centos;\""
+sudo -u postgres bash -c "psql -c \"CREATE DATABASE $RAILS_MODE;\""
+sudo -u postgres bash -c "psql -c \"GRANT ALL ON DATABASE $RAILS_MODE TO centos;\""
 
 # Clone and run hyku
 cd /opt
@@ -108,14 +109,30 @@ else
 fi
 sudo chown -R centos:centos /opt/hyku
 cd /opt/hyku
+mv /home/centos/install_files/fedora.yml config/fedora.yml
+mv /home/centos/install_files/solr.yml config/solr.yml
+mv /home/centos/install_files/blacklight.yml config/blacklight.yml
+mv /home/centos/install_files/settings.yml config/settings.yml
+mv /home/centos/install_files/database.yml config/database.yml
+mv /home/centos/install_files/production.yml config/settings/production.yml
+mv /home/centos/install_files/production.rb config/environments/production.rb
+
 echo 'Running bundler and db:migrate'
 # error with rainbow needs gem update --system
 gem update --system
-bundle install 
-rake db:migrate
+bundle install
+# setup secret key for devise; only used in production
+SECRET=$(rails secret)
+export SECRET_KEY_BASE=$SECRET
+rake db:migrate RAILS_ENV=$RAILS_MODE
 
-# need to add in the right IP addresses here
+export SECRET_KEY_BASE=$SECRET
+RAILS_ENV=$RAILS_MODE rake assets:precompile
 
-DISABLE_REDIS_CLUSTER=true bundle exec sidekiq &
-DISABLE_REDIS_CLUSTER=true nohup bundle exec rails server -b0.0.0.0 &
-disown
+export SECRET_KEY_BASE=$SECRET
+DISABLE_REDIS_CLUSTER=true RAILS_ENV=$RAILS_MODE bundle exec sidekiq &
+
+DISABLE_REDIS_CLUSTER=true nohup bundle exec rails server -e production -b0.0.0.0 &
+
+
+# need to add admin_host in settings.yml (and check if these files have copied)

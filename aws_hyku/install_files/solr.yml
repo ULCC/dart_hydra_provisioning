@@ -5,5 +5,5 @@ development:
 test:
   url: <%= ENV['SOLR_URL'] || "http://127.0.0.1:#{ENV.fetch('SOLR_TEST_PORT', 8985)}/solr/hydra-test" %>
 production:
-  url: http://35.157.154.58:8983/solr/hyku
+  url: http://35.157.250.34:8983/solr/hyku
 

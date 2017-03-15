@@ -44,10 +44,22 @@ Run:
 
 ```
 cd aws_solr
-vagrant up provider=aws
+vagrant up --provider=aws
 ```
 
 ### Hyku AWS (Centos7)
+
+Edit the following to provide the solr and fedora uri and paths:
+
+* install_files/fedora.yml
+* install_files/solr.yml
+* install_files/blacklight.yml
+
+add the solr uri and set admin_host to the ip address of the server in here:
+
+* install_files/settings.yml
+
+Hyku will run in single-tenancy mode.
 
 Make sure vagrant-env is installed
 
@@ -63,28 +75,17 @@ KEYPAIR_FILE=
 AWS_ACCESS_KEY=
 AWS_SECRET_KEY=
 AWS_SECURITY_GROUPS= # space-separated
+AWS_SUBNET=
 ```
 
 Run:
 
 ```
 cd aws_hyku
-vagrant up provider=aws
+vagrant up --provider=aws
 ```
 
-#### Post-Install Steps
-
-edit the following to provide the solr and fedora uri and paths:
-
-* config/fedora.yml
-* config/solr.yml
-* config/blacklight.yml
-
-add the solr uri and set admin_host to the ip address of the server in here:
-
-* config/settings.yml
-
-This will run Hyku in single-tenancy mode.
+To run in production, change the RAILS_MODE variable to 'production' at the top of provision_hyku.sh.
 
 ### Fedora local or AWS (Ubuntu)
 

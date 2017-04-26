@@ -1,15 +1,16 @@
 #!/bin/bash
 
-FITS="1.0.2" # testing 1.0.5
+FITS="1.0.2"
 RUBY="2.3.3"
-RAILS="5.0.0.1"
-RAILS_MODE="development"
+RAILS="5.0.2"
+RAILS_MODE="production"
+BRANCH="master"
 
 yes | sudo yum install -y git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel bzip2 autoconf automake libtool bison curl sqlite-devel
 yes | sudo yum install -y java-1.8.0-openjdk.x86_64 wget unzip
 # for fits "Error loading native library for MediaInfo please check that fits_home is properly set"
 yes | sudo yum install libmediainfo libzen
-# we'll need make for installing the pg gem
+# Need make for installing the pg gem
 yes | sudo yum install -y make
 
 # Install rbenv https://github.com/rbenv/rbenv
@@ -63,14 +64,15 @@ sudo systemctl enable redis.service
 
 # Install Fits
 # See https://github.com/projecthydra-labs/hyrax#characterization
-cd
+cd /opt
 if [ ! -d fits-1.0.2 ]
 then
   echo 'Downloading Fits '$FITS
-  wget http://projects.iq.harvard.edu/files/fits/files/fits-$FITS.zip
-  unzip fits-$FITS.zip
-  rm fits-$FITS.zip
-  chmod a+x fits-$FITS/fits.sh
+  sudo wget http://projects.iq.harvard.edu/files/fits/files/fits-$FITS.zip
+  sudo unzip fits-$FITS.zip
+  sudo rm fits-$FITS.zip
+  sudo chmod a+x fits-$FITS/fits.sh
+  sudo ln -s /opt/fits-1.0.2/fits.sh /usr/bin/fits.sh
 else
   echo 'Fits is already here, moving on ... '
 fi
@@ -102,13 +104,14 @@ sudo -u postgres bash -c "psql -c \"GRANT ALL ON DATABASE $RAILS_MODE TO centos;
 cd /opt
 if [ ! -d hyku ]
 then
-  echo 'Cloning hyku'
-  sudo git clone https://github.com/ULCC/hyku
+  echo 'Cloning dart_hyku'
+  sudo git clone https://github.com/ULCC/dart_hyku
 else
   echo 'hyku is already cloned, moving on ... '
 fi
 sudo chown -R centos:centos /opt/hyku
 cd /opt/hyku
+git checkout $BRANCH
 mv /home/centos/install_files/fedora.yml config/fedora.yml
 mv /home/centos/install_files/solr.yml config/solr.yml
 mv /home/centos/install_files/blacklight.yml config/blacklight.yml
@@ -125,14 +128,15 @@ bundle install
 SECRET=$(rails secret)
 export SECRET_KEY_BASE=$SECRET
 rake db:migrate RAILS_ENV=$RAILS_MODE
+rake hyrax:default_admin_set:create RAILS_ENV=$RAILS_MODE
+rake hyrax:workflow:load RAILS_ENV=$RAILS_MODE
 
 export SECRET_KEY_BASE=$SECRET
 RAILS_ENV=$RAILS_MODE rake assets:precompile
 
 export SECRET_KEY_BASE=$SECRET
 DISABLE_REDIS_CLUSTER=true RAILS_ENV=$RAILS_MODE bundle exec sidekiq &
+DISABLE_REDIS_CLUSTER=true nohup bundle exec rails server -e $RAILS_MODE -b0.0.0.0 &
 
-DISABLE_REDIS_CLUSTER=true nohup bundle exec rails server -e production -b0.0.0.0 &
-
-
-# need to add admin_host in settings.yml (and check if these files have copied)
+echo 'done!'
+# need to add admin_host in settings.yml - best way it to run vagrant up with --no-provision, add the ip and then run vagrant provision

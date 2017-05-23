@@ -14,11 +14,10 @@ cd hydra
 vagrant up
 ```
 
-The following scripts can be run standalone from any CentosBox to deploy either Hyku or ULCC_Hyrax:
+The following script can be run standalone from any CentosBox to deploy Hyku:
 
 ```
 hydra\provision_hyku.sh
-hydra\provision_hyrax.sh
 ```
 
 ### Solr AWS (Centos7)

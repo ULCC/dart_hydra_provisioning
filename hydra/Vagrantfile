@@ -27,7 +27,8 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 8983, host: 8983
   config.vm.network "forwarded_port", guest: 8984, host: 8984
   config.vm.network "forwarded_port", guest: 6379, host: 6379
-
+  config.vm.network "forwarded_port", guest: 9292, host: 9292
+  
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
@@ -44,7 +45,7 @@ Vagrant.configure(2) do |config|
   # config.vm.synced_folder "../data", "/vagrant_data"
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
   # Mount other synced folders
-  config.vm.synced_folder "../../hyrax_ulcc", "/hyrax_ulcc", type: "virtualbox"
+  # config.vm.synced_folder "../../hyrax_ulcc", "/hyrax_ulcc", type: "virtualbox"
   # config.vm.synced_folder "../../local", "/local", type: "virtualbox"
 
   # Provider-specific configuration so you can fine-tune various
@@ -56,19 +57,9 @@ Vagrant.configure(2) do |config|
   #   vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-     vb.memory = "3072"
+     vb.memory = "4084"
      vb.cpus = 2
   end
-  #
-  # View the documentation for the provider you are using for more
-  # information on available options.
-
-  # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
-  # such as FTP and Heroku are also available. See the documentation at
-  # https://docs.vagrantup.com/v2/push/atlas.html for more information.
-  # config.push.define "atlas" do |push|
-  #   push.app = "YOUR_ATLAS_USERNAME/YOUR_APPLICATION_NAME"
-  # end
 
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
@@ -79,11 +70,6 @@ Vagrant.configure(2) do |config|
   # SHELL
 
   # Run the provision script as the vagrant user (not root) 
-  config.vm.provision "shell", path: "provision_hyrax.sh", privileged: false
   config.vm.provision "shell", path: "provision_hyku.sh", privileged: false
-  config.vm.provision "shell", path: "provision_for_vagrant.sh", privileged: false
-  # copy the .env file into place
-  config.vm.provision "file", source: "./install_files/env_hyrax", destination: "~/hyku/.env"
-  config.vm.provision "file", source: "./install_files/env_hyku", destination: "~/hyrax_ulcc/.env"
 
 end

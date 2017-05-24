@@ -5,8 +5,9 @@
 #
 multitenancy:
   enabled: false
-  default_host: "%{tenant}.dev"
-  admin_host: 35.157.50.83
+  default_host: "%{tenant}.localhost"
+  # default_host: "%{tenant}.dev"
+  # admin_host:
 
 ssl_configured: false
 

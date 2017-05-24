@@ -4,7 +4,9 @@ FITS="1.0.2"
 RUBY="2.3.3"
 RAILS="5.0.2"
 RAILS_MODE="production"
-BRANCH="kfpub"
+BRANCH="master"
+REPO="https://github.com/projecthydra-labs/hyku"
+USER=centos
 
 yes | sudo yum install -y git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel bzip2 autoconf automake libtool bison curl sqlite-devel
 yes | sudo yum install -y java-1.8.0-openjdk.x86_64 wget unzip
@@ -95,23 +97,25 @@ sudo sed -i 's/ident/md5/' /var/lib/pgsql/data/pg_hba.conf
 sudo systemctl start postgresql
 sudo systemctl enable postgresql
 
-# Add the user, create database and grant all privileges
-sudo -u postgres bash -c "psql -c \"CREATE USER centos WITH PASSWORD 'centos';\""
-sudo -u postgres bash -c "psql -c \"CREATE DATABASE $RAILS_MODE;\""
-sudo -u postgres bash -c "psql -c \"GRANT ALL ON DATABASE $RAILS_MODE TO centos;\""
+# Add the user and allow them to create dbs
+sudo -u postgres bash -c "psql -c \"CREATE USER $USER WITH PASSWORD '$USER';\""
+sudo -u postgres bash -c "psql -c \"ALTER USER $USER CREATEDB;\""
+
 
 # Clone and run hyku
 cd /opt
 if [ ! -d hyku ]
 then
   echo 'Cloning dart_hyku'
-  sudo git clone https://github.com/ULCC/dart_hyku hyku
+  sudo git clone $REPO
 else
   echo 'hyku is already cloned, moving on ... '
 fi
-sudo chown -R centos:centos /opt/hyku
+sudo chown -R $USER:$USER /opt/hyku
 cd /opt/hyku
 git checkout $BRANCH
+
+# TODO make it so these aren't necessary
 mv /home/centos/install_files/fedora.yml config/fedora.yml
 mv /home/centos/install_files/solr.yml config/solr.yml
 mv /home/centos/install_files/blacklight.yml config/blacklight.yml
@@ -126,6 +130,7 @@ echo 'Running bundler and db:migrate'
 # error with rainbow needs gem update --system
 gem update --system
 bundle install
+rake db:create RAILS_ENV=$RAILS_MODE
 rake db:migrate RAILS_ENV=$RAILS_MODE
 rake db:migrate RAILS_ENV=$RAILS_MODE # this completes a second time; errors at end of first run
 rake hyrax:default_admin_set:create RAILS_ENV=$RAILS_MODE

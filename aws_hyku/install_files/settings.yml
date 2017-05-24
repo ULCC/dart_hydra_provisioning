@@ -6,7 +6,7 @@
 multitenancy:
   enabled: false
   default_host: "%{tenant}.dev"
-  admin_host: 52.57.105.103
+  admin_host: 35.157.50.83
 
 ssl_configured: false
 

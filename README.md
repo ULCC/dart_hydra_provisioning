@@ -55,7 +55,8 @@ Edit the following to provide the solr and fedora uri and paths:
 * install_files/solr.yml
 * install_files/blacklight.yml
 
-add the solr uri and set admin_host to the ip address of the server in here:
+add the solr uri and set admin_host to the ip address of the server in here 
+(see note below is only available after 'vagrant up'):
 
 * install_files/settings.yml
 
@@ -80,12 +81,36 @@ AWS_SUBNET=
 
 Run:
 
+Because we need to add the server ip as admin_host in settings.yml
+ 
+ ```
+ vagrant up --no-provision
+ # add the server ip into install_files/settings.yml
+ # add the server ip (port 3000) into an AWS security group that the solr/fedora servers have available
+ # this is so that this server can access solr and fedora
+ vagrant provision
+```
+
+If this wasn't needed, the command would be:
+
 ```
 cd aws_hyku
 vagrant up --provider=aws
 ```
 
-To run in production, change the RAILS_MODE variable to 'production' at the top of provision_hyku.sh.
+Variables at the top of provision_hyku.sh can be changed:
+
+```
+FITS="1.0.2"
+RUBY="2.3.3"
+RAILS="5.0.2"
+RAILS_MODE="production"
+BRANCH="master"
+```
+
+***Issue***:
+On running vagrant provision, the terminal never outputs, displaying 'Sending SSH keep-alive' indefinitely.
+Quitting with CTRL+C doesn't affect the server so is fine, but this isn't the correct behaviour and needs looking into.
 
 ### Fedora local or AWS (Ubuntu)
 

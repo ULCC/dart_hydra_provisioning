@@ -4,7 +4,7 @@ FITS="1.0.2"
 RUBY="2.3.3"
 RAILS="5.0.2"
 RAILS_MODE="production"
-BRANCH="master"
+BRANCH="kfpub"
 
 yes | sudo yum install -y git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel bzip2 autoconf automake libtool bison curl sqlite-devel
 yes | sudo yum install -y java-1.8.0-openjdk.x86_64 wget unzip
@@ -105,7 +105,7 @@ cd /opt
 if [ ! -d hyku ]
 then
   echo 'Cloning dart_hyku'
-  sudo git clone https://github.com/ULCC/dart_hyku
+  sudo git clone https://github.com/ULCC/dart_hyku hyku
 else
   echo 'hyku is already cloned, moving on ... '
 fi
@@ -119,24 +119,22 @@ mv /home/centos/install_files/settings.yml config/settings.yml
 mv /home/centos/install_files/database.yml config/database.yml
 mv /home/centos/install_files/production.yml config/settings/production.yml
 mv /home/centos/install_files/production.rb config/environments/production.rb
+mv /home/centos/install_files/secrets.yml config/secrets.yml
+rm -r /home/centos/install_files
 
 echo 'Running bundler and db:migrate'
 # error with rainbow needs gem update --system
 gem update --system
 bundle install
-# setup secret key for devise; only used in production
-SECRET=$(rails secret)
-export SECRET_KEY_BASE=$SECRET
 rake db:migrate RAILS_ENV=$RAILS_MODE
+rake db:migrate RAILS_ENV=$RAILS_MODE # this completes a second time; errors at end of first run
 rake hyrax:default_admin_set:create RAILS_ENV=$RAILS_MODE
 rake hyrax:workflow:load RAILS_ENV=$RAILS_MODE
 
-export SECRET_KEY_BASE=$SECRET
 RAILS_ENV=$RAILS_MODE rake assets:precompile
 
-export SECRET_KEY_BASE=$SECRET
-DISABLE_REDIS_CLUSTER=true RAILS_ENV=$RAILS_MODE bundle exec sidekiq &
-DISABLE_REDIS_CLUSTER=true nohup bundle exec rails server -e $RAILS_MODE -b0.0.0.0 &
+DISABLE_REDIS_CLUSTER=true bundle exec sidekiq -d -L log/sidekiq.log -e $RAILS_MODE
+DISABLE_REDIS_CLUSTER=true bundle exec puma -e $RAILS_MODE -p 3000 --pidfile tmp/pids/puma.pid -d
 
-echo 'done!'
-# need to add admin_host in settings.yml - best way it to run vagrant up with --no-provision, add the ip and then run vagrant provision
+echo 'Bye!'
+exit 0

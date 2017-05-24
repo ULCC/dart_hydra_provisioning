@@ -35,7 +35,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Run the provision script as the vagrant user (not root)
   config.vm.provision "shell", path: "provision_hyku.sh", privileged: false
 
-
   # Application server
   config.vm.define :hyku do |hyku|
     hyku.vm.hostname = "hyku"

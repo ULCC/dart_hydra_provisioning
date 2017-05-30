@@ -2,12 +2,12 @@
 
 FITS="1.0.2"
 RUBY="2.3.3"
-RAILS="5.0.2"
+RAILS="5.0.3"
 RAILS_MODE="development"
-BRANCH="master"
-# REPO="https://github.com/ULCC/dart_hyku"
 REPO="https://github.com/projecthydra-labs/hyku"
+BRANCH="master"
 USER=vagrant
+PHANTOM="phantomjs-2.1.1-linux-x86_64"
 
 echo 'Installing all the things'
 yes | sudo yum install -y git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel bzip2 autoconf automake libtool bison curl sqlite-devel java-1.8.0-openjdk.x86_64 wget unzip
@@ -102,6 +102,14 @@ sudo systemctl enable postgresql
 # Add the user, create database and grant all privileges
 sudo -u postgres bash -c "psql -c \"CREATE USER $USER WITH PASSWORD '$USER';\""
 sudo -u postgres bash -c "psql -c \"ALTER USER $RAILS_MODE CREATEDB;\""
+
+# Install phantomjs (only needed for running tests)
+yes | sudo yum install -y fontconfig
+cd ~
+wget https://bitbucket.org/ariya/phantomjs/downloads/$PHANTOM.tar.bz2
+tar xvf $PHANTOM
+sudo mv $PHANTOM /opt/phantomjs
+sudo ln -s /opt/phantomjs/bin/phantomjs /usr/bin/phantomjs
 
 # Clone hyku
 cd /opt

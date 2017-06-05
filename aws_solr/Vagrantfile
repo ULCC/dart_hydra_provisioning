@@ -30,7 +30,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
   # Run the provision script as the vagrant user (not root)
-  config.vm.provision "shell", path: "provision_solr_centos7.sh", privileged: false
+  config.vm.provision "shell", path: "../provision_scripts/provision_solr_centos7.sh", privileged: false
 
   # Application server
   config.vm.define :solr do |solr|

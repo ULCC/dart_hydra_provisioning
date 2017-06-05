@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SOLR="6.4.2"
+SOLR="6.5.2"
 
 yum -y update
 yes | sudo yum install -y java-1.8.0-openjdk.x86_64 wget unzip lsof

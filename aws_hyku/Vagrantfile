@@ -14,7 +14,7 @@ def security_groups( env_var )
     # Return some default
     case env_var
       when "AWS_SECURITY_GROUPS" then ["default_vpc_web_vt_ssh"]
-      else                            []
+      else []
     end
   else
     s.split
@@ -30,16 +30,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
-  # copy the files into place before shell provision runs
+  # Copy the files into place before shell provision runs
   config.vm.provision "file", source: "./install_files/", destination: "/home/centos/"
   # Run the provision script as the vagrant user (not root)
-  config.vm.provision "shell", path: "provision_hyku.sh", privileged: false
+  config.vm.provision "shell", path: "../provision_scripts/provision_prereq.sh", privileged: false
+  config.vm.provision "shell", path: "../provision_scripts/provision_hyku.sh", privileged: false
+  config.vm.provision "shell", path: "provision_hyku_aws.sh", privileged: false
 
   # Application server
   config.vm.define :hyku do |hyku|
     hyku.vm.hostname = "hyku"
 
-    # Use hydra for doing a virtual box
     # hyku.vm.provider :virtualbox do |vb, override|
     #   vb.box = "centos/7"
     #   vb.memory = 3072
@@ -57,15 +58,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       aws.secret_access_key = ENV['AWS_SECRET_KEY']
       aws.keypair_name = keypair
       #aws.ami = "ami-df0607b5" # Ubuntu Trusty LTS
-      #aws.ami = "ami-5aee2235"
-      aws.ami = "ami-9bf712f4"
-      #aws.region = "us-east-1"
+      aws.ami = "ami-9bf712f4" # centos7
       aws.region = "eu-central-1"
-      #aws.instance_type = "t2.medium"
       aws.instance_type = "t2.micro"
-      # added start
       aws.subnet_id = ENV['AWS_SUBNET']
-      # added end
       aws.security_groups = security_groups('AWS_SECURITY_GROUPS')
       override.ssh.username = "centos"
       override.ssh.private_key_path = "#{keypair_filename}"

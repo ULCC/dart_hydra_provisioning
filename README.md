@@ -5,22 +5,36 @@ These scripts are for **_development_** instances only.
 
 ## Vagrant
 
-### Hydra
+### Blacklight
 
-To deploy a Centos7 Virtual Box with Hyku and ULCC_Hyrax, using Vagrant:
+To deploy a Centos7 VirtualBox with Blacklight, using Vagrant:
 
 ```
-cd hydra
+cd blacklight
 vagrant up
 ```
 
-The following script can be run standalone from any CentosBox to deploy Hyku:
+### Hyrax
+
+To deploy a Centos7 VirtualBox with Hyrax, using Vagrant:
 
 ```
-hydra\provision_hyku.sh
+cd hyrax
+vagrant up
+```
+
+### Hyku
+
+To deploy a Centos7 VirtualBox with Hyku, using Vagrant:
+
+```
+cd hyku
+vagrant up
 ```
 
 ### Solr AWS (Centos7)
+
+To deploy a Centos7 AWS Box with solr, using Vagrant:
 
 Make sure vagrant-env is installed
 
@@ -48,16 +62,15 @@ vagrant up --provider=aws
 
 ### Hyku AWS (Centos7)
 
+To deploy a Centos7 AWS Box with Hyku, using Vagrant:
+
 Edit the following to provide the solr and fedora uri and paths:
 
-* install_files/fedora.yml
-* install_files/solr.yml
-* install_files/blacklight.yml
+* install_files/rbenv-vars
 
-add the solr uri and set admin_host to the ip address of the server in here 
-(see note below is only available after 'vagrant up'):
+add the solr uri to variable in:
 
-* install_files/settings.yml
+* provision_hyku_aws.sh
 
 Hyku will run in single-tenancy mode.
 
@@ -80,36 +93,46 @@ AWS_SUBNET=
 
 Run:
 
-Because we need to add the server ip as admin_host in settings.yml
- 
- ```
- vagrant up --no-provision
- # add the server ip into install_files/settings.yml
- # add the server ip (port 3000) into an AWS security group that the solr/fedora servers have available
- # this is so that this server can access solr and fedora
- vagrant provision
-```
-
-If this wasn't needed, the command would be:
-
 ```
 cd aws_hyku
 vagrant up --provider=aws
 ```
 
-Variables at the top of provision_hyku.sh can be changed:
+### Provision Scripts
+
+The scrips in the 'provision_scripts' folder are used by the vagrant installations. They can also be used standalone.
+
+* provision_prereq.sh
 
 ```
 FITS="1.0.2"
 RUBY="2.3.3"
-RAILS="5.0.2"
-RAILS_MODE="production"
-BRANCH="master"
+RAILS="5.0.3"
+USER=vagrant
 ```
 
-***Issue***:
-On running vagrant provision, the terminal never outputs, displaying 'Sending SSH keep-alive' indefinitely.
-Quitting with CTRL+C doesn't affect the server so is fine, but this isn't the correct behaviour and needs looking into.
+* provision_hyku.sh - has the following variables
+
+```
+RAILS_MODE="development"
+REPO="https://github.com/projecthydra-labs/hyku"
+BRANCH="master"
+USER=vagrant
+```
+
+* provision_hyrax.sh
+
+* provision_phantom.js
+
+```
+PHANTOM="phantomjs-2.1.1-linux-x86_64"
+```
+
+* provision_solr_centos7.sh
+
+```
+SOLR="6.5.2"
+```
 
 ### Fedora local or AWS (Ubuntu)
 

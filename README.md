@@ -68,7 +68,7 @@ Edit the following to provide the solr and fedora uri and paths:
 
 * install_files/rbenv-vars
 
-add the solr uri to variable in:
+add the variables at the top of; check the solr URI is correct:
 
 * provision_hyku_aws.sh
 
@@ -98,6 +98,8 @@ cd aws_hyku
 vagrant up --provider=aws
 ```
 
+As soon as the ip address for the new box is available, add it to the security groups in AWS otherwise you won't be able to update solr or fedora.
+
 ### Provision Scripts
 
 The scrips in the 'provision_scripts' folder are used by the vagrant installations. They can also be used standalone.
@@ -111,14 +113,7 @@ RAILS="5.0.3"
 USER=vagrant
 ```
 
-* provision_hyku.sh - has the following variables
-
-```
-RAILS_MODE="development"
-REPO="https://github.com/projecthydra-labs/hyku"
-BRANCH="master"
-USER=vagrant
-```
+* provision_postgres.sh
 
 * provision_hyrax.sh
 

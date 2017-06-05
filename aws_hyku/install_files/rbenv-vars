@@ -2,4 +2,7 @@ SECRET_KEY_BASE=209df472e472acbb690e3f98ac94be8d8c29ed0f92578faf41f6abcf0c654743
 SOLR_URL=http://35.157.250.34:8983/solr/hyku
 FEDORA_URL=http://35.157.203.26:8080/fcrepo/rest
 RDS_DB_NAME=production
+RDS_USERNAME=centos
+RDS_PASSWORD=centos
 RAILS_SERVE_STATIC_FILES=true
+DISABLE_DATABASE_ENVIRONMENT_CHECK=1 # let's not worry about destructiveness!

@@ -34,7 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "file", source: "./install_files/", destination: "/home/centos/"
   # Run the provision script as the vagrant user (not root)
   config.vm.provision "shell", path: "../provision_scripts/provision_prereq.sh", privileged: false
-  config.vm.provision "shell", path: "../provision_scripts/provision_hyku.sh", privileged: false
+  config.vm.provision "shell", path: "../provision_scripts/provision_postgres.sh", privileged: false
   config.vm.provision "shell", path: "provision_hyku_aws.sh", privileged: false
 
   # Application server

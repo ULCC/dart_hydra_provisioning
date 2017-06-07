@@ -45,7 +45,8 @@ Vagrant.configure(2) do |config|
   # config.vm.synced_folder "../data", "/vagrant_data"
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
   # Mount other synced folders
-  # config.vm.synced_folder "../../hyrax_ulcc", "/hyrax_ulcc", type: "virtualbox"
+  #   This assumes you have a folder called 'hyku' in the same directory as dart_hydrar_provisioning
+  config.vm.synced_folder "../../hyku", "/opt/hyku_mounted", type: "virtualbox"
   # config.vm.synced_folder "../../local", "/local", type: "virtualbox"
 
   # Provider-specific configuration so you can fine-tune various

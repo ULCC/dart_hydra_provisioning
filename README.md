@@ -30,7 +30,7 @@ cd hyku
 vagrant up
 ```
 
-Before running, check, the variables at the top of `provision_hyku_aws.sh` and `provision_scripts\provision_phantomjs.sh`
+Before running, check, the variables at the top of `provision_hyku_local.sh` and `provision_scripts\provision_phantomjs.sh`
 
 ### Solr AWS (Centos7)
 
@@ -59,6 +59,8 @@ Run:
 cd aws_solr
 vagrant up --provider=aws
 ```
+
+Before running, check, the variables at the top of `provision_solr_centos7.sh`
 
 ### Hyku AWS (Centos7)
 

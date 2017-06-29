@@ -102,19 +102,22 @@ vagrant up --no-provision
 
 This will create the box, but won't run the provisioning scripts. We need the machine ip address in order to fully provision.
 
-Once the bos is running, find it's ip address and do the following:
+Once the machine is running, find it's ip address and do the following:
 
-1. add it into an AWS security group to enable the fedora and solr servers to receive requests from this IP.
+1. Add it into an AWS security group to enable the fedora and solr servers to receive requests from this IP.
 2. Edit the following files in install_files with the new ip address:
 
-* hyku.conf
-* hyku_ssl.conf
-* hyku_ssl_passenger.conf
-* sp2config.xml
+* install_files/hyku.conf
+* install_files/hyku_ssl.conf
+* install_files/hyku_ssl_passenger.conf
+* install_files/sp2config.xml
+* Metadataforshibhykutesting
 
 The current text is set as REPLACE_ME ... so a find and replace on that will suffice.
 
 Before running, check, the variables at the top of `provision_hyku_aws.sh`
+
+Note: `Metadataforshibhykutesting` is a sample of the shibboleth metadata that can be used for testing with testshib.org. 
 
 ### Provision Scripts
 

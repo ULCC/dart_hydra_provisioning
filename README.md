@@ -1,7 +1,5 @@
 # dart_hydra_provisioning
-Hydra Provisioning Scripts
-
-These scripts are for **_development_** instances only.
+Hydra Provisioning Scripts for deploying Hyku, Fcrepo and Solr. They are  **_not_** production-ready.
 
 ## Vagrant
 
@@ -31,6 +29,8 @@ To deploy a Centos7 VirtualBox with Hyku, using Vagrant:
 cd hyku
 vagrant up
 ```
+
+Before running, check, the variables at the top of `provision_hyku_aws.sh` and `provision_scripts\provision_phantomjs.sh`
 
 ### Solr AWS (Centos7)
 
@@ -95,39 +95,42 @@ Run:
 
 ```
 cd aws_hyku
-vagrant up --provider=aws
+vagrant up --no-provision
 ```
 
-As soon as the ip address for the new box is available, add it to the security groups in AWS otherwise you won't be able to update solr or fedora.
+This will create the box, but won't run the provisioning scripts. We need the machine ip address in order to fully provision.
+
+Once the bos is running, find it's ip address and do the following:
+
+1. add it into an AWS security group to enable the fedora and solr servers to receive requests from this IP.
+2. Edit the following files in install_files with the new ip address:
+
+* hyku.conf
+* hyku_ssl.conf
+* hyku_ssl_passenger.conf
+* sp2config.xml
+
+The current text is set as REPLACE_ME ... so a find and replace on that will suffice.
+
+Before running, check, the variables at the top of `provision_hyku_aws.sh`
 
 ### Provision Scripts
 
-The scrips in the 'provision_scripts' folder are used by the vagrant installations. They can also be used standalone.
+The scripts in the 'provision_scripts' folder are used by the vagrant installations. They can also be used standalone.
+
+For Hyku:
 
 * provision_prereq.sh
-
-```
-FITS="1.0.2"
-RUBY="2.3.3"
-RAILS="5.0.3"
-USER=vagrant
-```
-
 * provision_postgres.sh
-
 * provision_hyrax.sh
+* provision_phantom.js (requires the correct version to be set as a variable in the script)
+* provision_shib.sh
+* provision sidekiq.sh
+* provision_postgres.sh
+* provision_passenger.sh
 
-* provision_phantom.js
+* provision_solr_centos7.sh (requires the solr version to be set as a variable in the script)
 
-```
-PHANTOM="phantomjs-2.1.1-linux-x86_64"
-```
-
-* provision_solr_centos7.sh
-
-```
-SOLR="6.5.2"
-```
 
 ### Fedora local or AWS (Ubuntu)
 

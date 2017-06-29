@@ -1,4 +1,4 @@
-.vagrant
-.env
 /hyrax/hyrax/
 /blacklight/blacklight/
+/hyku/install_files/fcrepo*
+/hyku/install_files/solr*

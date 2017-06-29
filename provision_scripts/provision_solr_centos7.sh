@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SOLR="6.5.2"
+SOLR="6.6.0"
 
 yum -y update
 yes | sudo yum install -y java-1.8.0-openjdk.x86_64 wget unzip lsof
@@ -18,17 +18,12 @@ sudo mv solr-$SOLR /opt/solr
 
 cd /opt/solr
 bin/solr start
-bin/solr create -c hyrax
-cd server/solr/hyrax/conf
-mv solrconfig.xml solrconfig.xmlBAK
-wget https://raw.githubusercontent.com/projecthydra-labs/hyrax/master/solr/config/solrconfig.xml
-wget https://raw.githubusercontent.com/projecthydra-labs/hyrax/master/solr/config/schema.xml
-cd /opt/solr
-bin/solr restart
+# Create a Collection
 bin/solr create -c hyku
 cd server/solr/hyku/conf
 mv solrconfig.xml solrconfig.xmlBAK
 wget https://raw.githubusercontent.com/projecthydra-labs/hyrax/master/solr/config/solrconfig.xml
 wget https://raw.githubusercontent.com/projecthydra-labs/hyrax/master/solr/config/schema.xml
+
 cd /opt/solr
 bin/solr restart

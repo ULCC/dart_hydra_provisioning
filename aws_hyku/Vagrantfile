@@ -31,10 +31,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
   # Copy the files into place before shell provision runs
-  config.vm.provision "file", source: "./install_files/", destination: "/home/centos/"
-  # Run the provision script as the vagrant user (not root)
-  config.vm.provision "shell", path: "../provision_scripts/provision_prereq.sh", privileged: false
-  config.vm.provision "shell", path: "../provision_scripts/provision_postgres.sh", privileged: false
+  config.vm.provision "file", source: "./install_files/", destination: "/tmp/"
+  config.vm.provision "file", source: "../../kf_files/", destination: "/tmp/"
+  # Run the provision scripts as the vagrant user (not root), except apache
+  config.vm.provision "shell", path: "../provision_scripts/provision_prereq.sh", privileged: true
+  config.vm.provision "shell", path: "../provision_scripts/provision_shib.sh", privileged: true
+  config.vm.provision "shell", path: "../provision_scripts/provision_apache.sh", privileged: true
+  config.vm.provision "shell", path: "../provision_scripts/provision_passenger.sh", privileged: true
+  config.vm.provision "shell", path: "../provision_scripts/provision_postgres.sh", privileged: true
+  config.vm.provision "shell", path: "../provision_scripts/provision_sidekiq.sh", privileged: true
   config.vm.provision "shell", path: "provision_hyku_aws.sh", privileged: false
 
   # Application server
@@ -60,7 +65,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       #aws.ami = "ami-df0607b5" # Ubuntu Trusty LTS
       aws.ami = "ami-9bf712f4" # centos7
       aws.region = "eu-central-1"
-      aws.instance_type = "t2.micro"
+      # aws.instance_type = "t2.micro"
+      aws.instance_type = "t2.small"
       aws.subnet_id = ENV['AWS_SUBNET']
       aws.security_groups = security_groups('AWS_SECURITY_GROUPS')
       override.ssh.username = "centos"

@@ -3,11 +3,17 @@
 FITS="1.1.1"
 RUBY="2.3.3"
 
+########################
+# Install dependencies #
+########################
 echo 'Installing all the things'
 yes | yum install -y git-core zlib zlib-devel gcc-c++ patch readline readline-devel libyaml-devel libffi-devel openssl-devel bzip2 autoconf automake libtool bison curl sqlite-devel java-1.8.0-openjdk.x86_64 wget unzip
 # Need make for installing the pg gem
 yes | yum install -y make
 
+#################################
+# Install rbenv into /usr/local #
+#################################
 echo 'Installing rbenv for all users'
 # Install rbenv https://github.com/rbenv/rbenv
 # See https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-centos-7
@@ -30,16 +36,25 @@ else
   echo '.rbenv is installed, moving on ...'
 fi
 
+################
+# Install ruby #
+################
 echo 'Installing ruby '$RUBY
 rbenv install $RUBY
 rbenv global $RUBY
 
+#######################################
+# Install LibreOffice and ImageMagick #
+#######################################
 echo 'Installing LibreOffice, ImageMagick and Redis'
 # LibreOffice
 yes | yum install –y libreoffice
 # Install ImageMagick
 yes | yum install –y ImageMagick
 
+##############################
+# Install Redis (needs EPEL) #
+##############################
 # Install Redis - enable EPEL
 # See https://support.rackspace.com/how-to/install-epel-and-additional-repositories-on-centos-and-red-hat/
 yes | yum install -y epel-release
@@ -52,22 +67,29 @@ else
   rpm -Uvh epel-release-latest-7*.rpm
 fi
 # Install Redis
+# TODO consider any production config
 yes | yum install -y redis
 # Start Redis
 # See http://sharadchhetri.com/2014/10/04/install-redis-server-centos-7-rhel-7/
 # bind redis to 0.0.0.0 to allow external monitoring
-sed -i 's/bind 127.0.0.1/bind 0.0.0.0/g' /etc/redis.conf
+# sed -i 's/bind 127.0.0.1/bind 0.0.0.0/g' /etc/redis.conf
 echo 'Starting Redis'
 systemctl start redis.service
 echo 'Enable Redis start at boot'
 systemctl enable redis.service
 
+##################################
+# Install Mediainfo (needs EPEL) #
+##################################
 # Mediainfo is needed for Fits; it requires the EPEL repo
 # otherwise fits "Error loading native library for MediaInfo please check that fits_home is properly set"
 yes | yum install -y libmediainfo libzen mediainfo
 
-# Install Fits
+##########################
+# Install Fits into /opt #
+##########################
 # See https://github.com/projecthydra-labs/hyrax#characterization
+# TODO consider any production config
 cd /opt
 if [ ! -d fits-$FITS ]
 then
@@ -81,5 +103,8 @@ else
   echo 'Fits is already here, moving on ... '
 fi
 
+##################
+# Install nodejs #
+##################
 # Install nodejs
 yes | yum install -y nodejs

@@ -3,6 +3,8 @@ Hydra Provisioning Scripts for deploying Hyku, Fcrepo and Solr. They are  **_not
 
 ## Vagrant
 
+Each of the following folders contains a Vagrantfile for bringing up a local or AWS box using vagrant. There are various configuration settings in the Vagrantfile that may need changing for your environment. Eg. for the amount of RAM given to the box, or the AWS box (t1.micro etc.).
+
 ### Blacklight
 
 To deploy a Centos7 VirtualBox with Blacklight, using Vagrant:
@@ -31,6 +33,8 @@ vagrant up
 ```
 
 Before running, check, the variables at the top of `provision_hyku_local.sh` and `provision_scripts\provision_phantomjs.sh`
+
+This script take a while and installs Hyku in a production-like way, with apache, passenger and other things. But it still uses solr_wrapper and fcrepo_wrapper which are not intended for production. To change what is installed, edit the list of scripts in the Vagrant file.
 
 ### Solr AWS (Centos7)
 
@@ -66,11 +70,11 @@ Before running, check, the variables at the top of `provision_solr_centos7.sh`
 
 To deploy a Centos7 AWS Box with Hyku, using Vagrant:
 
-Edit the following to provide the solr and fedora uri and paths:
+Create the following to provide the solr and fedora uri and paths using .rbenv-vars-template as a guide:
 
-* install_files/rbenv-vars
+* install_files/.rbenv-vars
 
-add the variables at the top of; check the solr URI is correct:
+add the variables at the top of this file including the the solr URI:
 
 * provision_hyku_aws.sh
 
@@ -119,7 +123,15 @@ Before running, check, the variables at the top of `provision_hyku_aws.sh`
 
 Note: `Metadataforshibhykutesting` is a sample of the shibboleth metadata that can be used for testing with testshib.org. 
 
-### Provision Scripts
+### Fedora local or AWS (Ubuntu)
+
+Lightly modified Vagrantfile from https://github.com/VTUL/fcrepo4-ansible
+
+* Checkout https://github.com/VTUL/fcrepo4-ansible
+* Replace the Vagrant file with this one
+* Create an .env file as per Hyku AWS
+
+## Provision Scripts
 
 The scripts in the 'provision_scripts' folder are used by the vagrant installations. They can also be used standalone.
 
@@ -136,18 +148,9 @@ For Hyku:
 
 * provision_solr_centos7.sh (requires the solr version to be set as a variable in the script)
 
-
-### Fedora local or AWS (Ubuntu)
-
-Lightly modified Vagrantfile from https://github.com/VTUL/fcrepo4-ansible
-
-* Checkout https://github.com/VTUL/fcrepo4-ansible
-* Replace the Vagrant file with this one
-* Create an .env file as per Hyku AWS
-
 ## Other Scripts
 
 ### provision_hyrax_ubuntu.sh 
 
-incomplete script to run ulcc_hyrax on ubuntu 16.04
+incomplete and rough script to run dart_hyrax on ubuntu 16.04
 

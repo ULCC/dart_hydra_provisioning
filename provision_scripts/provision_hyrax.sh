@@ -1,5 +1,6 @@
 #!/bin/bash
 
+  # Quick and dirty setup for Hyrax
   # TODO set rails version properly
 
   # Use vagrant directory for hyrax to allow in-host tinkering (and to avoid faff of permissions in opt)

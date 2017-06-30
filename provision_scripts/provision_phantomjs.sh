@@ -2,7 +2,10 @@
 
 PHANTOM="phantomjs-2.1.1-linux-x86_64"
 
-# Install phantomjs (only needed for running tests)
+#####################################################
+# Install phantomjs (only needed for running tests) #
+#####################################################
+
 yes | sudo yum install -y fontconfig
 if [ ! -d /opt/phantomjs ]
 then

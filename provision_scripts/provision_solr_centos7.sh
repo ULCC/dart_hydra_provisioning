@@ -2,6 +2,8 @@
 
 SOLR="6.6.0"
 
+# Quick and dirty setup for Solr
+
 yum -y update
 yes | sudo yum install -y java-1.8.0-openjdk.x86_64 wget unzip lsof
 

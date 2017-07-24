@@ -135,11 +135,8 @@ Lightly modified Vagrantfile from https://github.com/VTUL/fcrepo4-ansible
 
 The scripts in the 'provision_scripts' folder are used by the vagrant installations. They can also be used standalone.
 
-For Hyku:
-
-* provision_prereq.sh
+* provision_prereq.sh (set the fits and ruby versions at the top of the script)
 * provision_postgres.sh
-* provision_hyrax.sh
 * provision_phantom.js (requires the correct version to be set as a variable in the script)
 * provision_shib.sh
 * provision sidekiq.sh

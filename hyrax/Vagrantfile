@@ -44,7 +44,7 @@ Vagrant.configure(2) do |config|
   # config.vm.synced_folder "../data", "/vagrant_data"
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
   # Mount other synced folders
-  # config.vm.synced_folder "../../hyrax_ulcc", "/hyrax_ulcc", type: "virtualbox"
+  config.vm.synced_folder "../../dart_hyrax", "/opt/dart_hyrax"
   # config.vm.synced_folder "../../local", "/local", type: "virtualbox"
 
   # Provider-specific configuration so you can fine-tune various

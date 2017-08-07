@@ -123,31 +123,51 @@ Before running, check, the variables at the top of `provision_hyku_aws.sh`
 
 Note: `Metadataforshibhykutesting` is a sample of the shibboleth metadata that can be used for testing with testshib.org. 
 
-### Fedora local or AWS (Ubuntu)
+### Fedora4 AWS (Ubuntu)
 
-Lightly modified Vagrantfile from https://github.com/VTUL/fcrepo4-ansible
+vagrant_for_fcrepo4-ansible/fcrepo4 contains a modified Vagrantfile from https://github.com/VTUL/fcrepo4-ansible
 
+* vagrant plugin install vagrant-aws
 * Checkout https://github.com/VTUL/fcrepo4-ansible
-* Replace the Vagrant file with this one
-* Create an .env file as per Hyku AWS
+* Replace the Vagrant file with this vagrant_for_fcrepo4-ansible/fcrepo4/Vagrantfile
+* Create an .env file containing
 
+```
+KEYPAIR_NAME=""
+KEYPAIR_FILE=""
+AWS_ACCESS_KEY=""
+AWS_SECRET_KEY=""
+AWS_SECURITY_GROUPS=""
+AWS_SUBNET=""
+```
+
+Note: If running on Windows, Ansible is not supported (there are ways round this, with cygwin and the Linux subsystem 
+for Windows) but as an alternative vagrant_for_fcrepo4-ansible contains a Vagrantfile for a centosbox that will install 
+vagrant and ansible - this can be used to run the vagrant up/provision. It's not ideal, but it works!
+ 
 ## Provision Scripts
 
 The scripts in the 'provision_scripts' folder are used by the vagrant installations. They can also be used standalone.
 
-* provision_prereq.sh (set the fits and ruby versions at the top of the script)
+* provision_prereq.sh (set the fits and ruby versions at the top of the script, the domain/ip )
 * provision_postgres.sh
 * provision_phantom.js (requires the correct version to be set as a variable in the script)
-* provision_shib.sh
+* provision_shib.sh (set the domain/ip at the top of the file)
 * provision sidekiq.sh
 * provision_postgres.sh
 * provision_passenger.sh
 
-* provision_solr_centos7.sh (requires the solr version to be set as a variable in the script)
+* provision_solr_centos7.sh (requires the solr version and user to be set as a variable in the script)
 
 ## Other Scripts
 
 ### provision_hyrax_ubuntu.sh 
 
 incomplete and rough script to run dart_hyrax on ubuntu 16.04
+
+## Running on windows
+
+If you get the error `No synced folder implementation is available for your synced folders`, a quick solution is 
+`vagrant plugin install vagrant-winnfsd` or figure out how to install rsync I guess.
+
 

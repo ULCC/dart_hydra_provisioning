@@ -1,5 +1,7 @@
 #!/bin/bash
 
+HYKU_IP="35.176.13.27"
+
 ######################
 # Install Shibboleth #
 ######################
@@ -12,6 +14,8 @@ yes | yum install -y shibboleth.x86_64
 #############
 cp /etc/shibboleth/shibboleth2.xml /etc/shibboleth/shibboleth2.xmlBAK
 cp /tmp/install_files/sp2config.xml /etc/shibboleth/shibboleth2.xml
+
+sudo sed -i 's/REPLACE_ME/$HYKU_IP/' /etc/shibboleth/shibboleth2.xml
 
 ############################
 # Start and enable at boot #

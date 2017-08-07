@@ -1,5 +1,7 @@
 #!/bin/bash
 
+HYKU_IP="35.176.13.27"
+
 ##############################
 # Install Apache and mod_ssl #
 ##############################
@@ -40,6 +42,10 @@ mkdir /etc/httpd/sites-available
 mkdir /etc/httpd/sites-enabled
 cp /tmp/install_files/hyku.conf /etc/httpd/sites-available/hyku.conf
 cp /tmp/install_files/hyku_ssl.conf /etc/httpd/sites-available/hyku_ssl.conf
+
+sudo sed -i 's/REPLACE_ME/$HYKU_IP/' /etc/httpd/sites-available/hyku.conf
+sudo sed -i 's/REPLACE_ME/$HYKU_IP/' /etc/httpd/sites-available/hyku_ssl.conf
+
 ln -s /etc/httpd/sites-available/hyku.conf /etc/httpd/sites-enabled/hyku.conf
 ln -s /etc/httpd/sites-available/hyku_ssl.conf /etc/httpd/sites-enabled/hyku_ssl.conf
 

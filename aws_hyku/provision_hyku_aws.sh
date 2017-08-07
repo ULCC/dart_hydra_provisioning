@@ -3,9 +3,12 @@
 USER="centos"
 RAILS="5.0.3"
 RAILS_MODE="production"
-REPO=https://github.com/ULCC/dart_hyku
-BRANCH="kfpub_shib"
-SOLR_URL="35.157.250.34"
+# REPO=https://github.com/ULCC/dart_hyku
+REPO=https://github.com/samvera-labs/hyku
+# BRANCH="kfpub_shib"
+BRANCH="master"
+SOLR_URL="35.176.223.211"
+HYKU_IP="35.176.13.27"
 
 ####################################################################
 # Setup rbenv for the local user and change ownership to this user #

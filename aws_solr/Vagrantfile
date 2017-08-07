@@ -29,8 +29,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
+  config.vm.provision "file", source: "./install_files/", destination: "/tmp/"
   # Run the provision script as the vagrant user (not root)
-  config.vm.provision "shell", path: "../provision_scripts/provision_solr_centos7.sh", privileged: false
+  config.vm.provision "shell", path: "../provision_scripts/provision_solr_centos7.sh", privileged: true
 
   # Application server
   config.vm.define :solr do |solr|
@@ -53,12 +54,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       aws.secret_access_key = ENV['AWS_SECRET_KEY']
       aws.keypair_name = keypair
       #aws.ami = "ami-df0607b5" # Ubuntu Trusty LTS
-      #aws.ami = "ami-5aee2235"
-      aws.ami = "ami-9bf712f4"
-      #aws.region = "us-east-1"
-      aws.region = "eu-central-1"
-      #aws.instance_type = "t2.medium"
-      aws.instance_type = "t2.micro"
+      aws.ami = "ami-c22236a6" # centos7 https://wiki.centos.org/Cloud/AWS
+      aws.region = "eu-west-2" # London
+      aws.instance_type = "t2.medium" # 4GB 2CPU
       # added start
       aws.subnet_id = ENV['AWS_SUBNET']
       # added end
